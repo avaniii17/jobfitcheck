@@ -53,7 +53,7 @@ export default function Home() {
           <div className="mx-auto max-w-3xl text-center">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-sm text-primary">
               <Sparkles className="h-4 w-4" />
-              Powered by Claude Sonnet 4.6
+              Powered by Google Gemini
             </div>
             <h1 className="mb-6 text-balance text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
               Know Your{' '}
@@ -137,7 +137,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t border-border/50 py-8">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>JobFit AI uses Claude Sonnet 4.6 to analyze your job fit and generate tailored documents.</p>
+          <p>JobFit AI uses Google Gemini to analyze your job fit and generate tailored documents.</p>
         </div>
       </footer>
     </main>

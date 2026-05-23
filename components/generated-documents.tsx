@@ -6,15 +6,19 @@ import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { FileText, Mail, Copy, Check, Download } from 'lucide-react'
 import { downloadResumePdf } from '@/lib/download-resume-pdf'
+import { resumeToPlainText } from '@/lib/resume-text'
+import { ResumePreview } from '@/components/resume-preview'
+import type { TailoredResume } from '@/lib/analysis-schema'
 
 interface GeneratedDocumentsProps {
-  tailoredResume: string
+  tailoredResume: TailoredResume
   coverLetter: string
 }
 
 export function GeneratedDocuments({ tailoredResume, coverLetter }: GeneratedDocumentsProps) {
   const [copiedResume, setCopiedResume] = useState(false)
   const [copiedCoverLetter, setCopiedCoverLetter] = useState(false)
+  const plainResume = resumeToPlainText(tailoredResume)
 
   const copyToClipboard = async (text: string, type: 'resume' | 'coverLetter') => {
     await navigator.clipboard.writeText(text)
@@ -44,7 +48,7 @@ export function GeneratedDocuments({ tailoredResume, coverLetter }: GeneratedDoc
       <CardHeader>
         <CardTitle className="text-xl">Your Tailored Resume</CardTitle>
         <CardDescription>
-          Optimized for this job — download the one-page PDF or copy the text
+          Professionally formatted for this role — preview, download PDF, or copy text
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -68,12 +72,12 @@ export function GeneratedDocuments({ tailoredResume, coverLetter }: GeneratedDoc
                 className="gap-2"
               >
                 <Download className="h-4 w-4" />
-                Download PDF (1 page)
+                Download PDF
               </Button>
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => copyToClipboard(tailoredResume, 'resume')}
+                onClick={() => copyToClipboard(plainResume, 'resume')}
                 className="gap-2"
               >
                 {copiedResume ? (
@@ -84,24 +88,22 @@ export function GeneratedDocuments({ tailoredResume, coverLetter }: GeneratedDoc
                 ) : (
                   <>
                     <Copy className="h-4 w-4" />
-                    Copy
+                    Copy text
                   </>
                 )}
               </Button>
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => downloadAsText(tailoredResume, 'tailored-resume.txt')}
+                onClick={() => downloadAsText(plainResume, 'tailored-resume.txt')}
                 className="gap-2"
               >
                 <Download className="h-4 w-4" />
                 Download .txt
               </Button>
             </div>
-            <div className="max-h-[500px] overflow-auto rounded-lg border border-border bg-background/50 p-4">
-              <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed">
-                {tailoredResume}
-              </pre>
+            <div className="max-h-[640px] overflow-auto rounded-lg border border-border bg-slate-100/80 p-4 dark:bg-slate-900/50">
+              <ResumePreview resume={tailoredResume} />
             </div>
           </TabsContent>
 
@@ -135,10 +137,10 @@ export function GeneratedDocuments({ tailoredResume, coverLetter }: GeneratedDoc
                 Download
               </Button>
             </div>
-            <div className="max-h-[500px] overflow-auto rounded-lg border border-border bg-background/50 p-4">
-              <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed">
+            <div className="max-h-[500px] overflow-auto rounded-lg border border-border bg-white px-8 py-10 shadow-sm dark:bg-slate-950">
+              <div className="mx-auto max-w-2xl whitespace-pre-wrap text-[13px] leading-relaxed text-slate-700 dark:text-slate-300">
                 {coverLetter}
-              </pre>
+              </div>
             </div>
           </TabsContent>
         </Tabs>

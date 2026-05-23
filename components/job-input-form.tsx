@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Loader2, FileText, Briefcase, Sparkles, Upload, X, HardDrive } from 'lucide-react'
+import { extractTextFromPdfFile } from '@/lib/pdf-extract'
 
 interface JobInputFormProps {
   onAnalyze: (jobDescription: string, resume: string) => void
@@ -28,29 +29,6 @@ export function JobInputForm({ onAnalyze, isLoading }: JobInputFormProps) {
     }
   }
 
-  const extractTextFromPdf = async (file: File): Promise<string> => {
-    const pdfjsLib = await import('pdfjs-dist')
-
-    // pdf.js v5 requires the .mjs worker (bundled in /public, synced on postinstall)
-    pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs'
-
-    const arrayBuffer = await file.arrayBuffer()
-    const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise
-    
-    let fullText = ''
-    
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i)
-      const textContent = await page.getTextContent()
-      const pageText = textContent.items
-        .map((item) => ('str' in item ? item.str : ''))
-        .join(' ')
-      fullText += pageText + '\n\n'
-    }
-    
-    return fullText.trim()
-  }
-
   const handleFileUpload = async (file: File) => {
     const isPdf = file.type.includes('pdf') || file.name.toLowerCase().endsWith('.pdf')
     if (!isPdf) {
@@ -62,7 +40,7 @@ export function JobInputForm({ onAnalyze, isLoading }: JobInputFormProps) {
     setUploadError(null)
 
     try {
-      const text = await extractTextFromPdf(file)
+      const text = await extractTextFromPdfFile(file)
       
       if (!text.trim()) {
         setUploadError('Could not extract text from PDF. Please paste your resume manually.')

@@ -10,12 +10,12 @@ This repository is linked to a [v0](https://v0.app) project. You can continue de
 
 ## Getting Started
 
-### 1. Configure Claude (Anthropic)
+### 1. Configure Google Gemini
 
-Copy `.env.example` to `.env.local` and add your API key from [Anthropic Console](https://console.anthropic.com/):
+Copy `.env.example` to `.env.local` and add your API key from [Google AI Studio](https://aistudio.google.com/apikey):
 
 ```bash
-ANTHROPIC_API_KEY=sk-ant-...
+GOOGLE_GENERATIVE_AI_API_KEY=your-api-key-here
 ```
 
 ### 2. Run the development server

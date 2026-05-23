@@ -1,7 +1,7 @@
 'use client'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import { SkillList } from '@/components/skill-list'
 import { CheckCircle2, XCircle, TrendingUp, AlertCircle } from 'lucide-react'
 
 import type { AnalysisResult } from '@/lib/analysis-schema'
@@ -56,9 +56,9 @@ export function FitAnalysis({ result }: FitAnalysisProps) {
         </CardContent>
       </Card>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid min-w-0 gap-6 md:grid-cols-2">
         {/* Matching Skills */}
-        <Card className="border-green-500/30 bg-green-950/20">
+        <Card className="min-w-0 overflow-hidden border-green-500/30 bg-green-950/20">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
               <CheckCircle2 className="h-5 w-5 text-green-400" />
@@ -68,22 +68,17 @@ export function FitAnalysis({ result }: FitAnalysisProps) {
               Skills you have that match the job requirements
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-2">
-              {result.matchingSkills.map((skill, i) => (
-                <Badge key={i} variant="secondary" className="bg-green-500/20 text-green-300">
-                  {skill}
-                </Badge>
-              ))}
-              {result.matchingSkills.length === 0 && (
-                <p className="text-sm text-muted-foreground">No direct skill matches found</p>
-              )}
-            </div>
+          <CardContent className="min-w-0">
+            <SkillList
+              skills={result.matchingSkills}
+              tone="match"
+              emptyMessage="No direct skill matches found"
+            />
           </CardContent>
         </Card>
 
         {/* Missing Skills */}
-        <Card className="border-red-500/30 bg-red-950/20">
+        <Card className="min-w-0 overflow-hidden border-red-500/30 bg-red-950/20">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
               <XCircle className="h-5 w-5 text-red-400" />
@@ -93,22 +88,17 @@ export function FitAnalysis({ result }: FitAnalysisProps) {
               Required skills that could strengthen your application
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-2">
-              {result.missingSkills.map((skill, i) => (
-                <Badge key={i} variant="secondary" className="bg-red-500/20 text-red-300">
-                  {skill}
-                </Badge>
-              ))}
-              {result.missingSkills.length === 0 && (
-                <p className="text-sm text-muted-foreground">You have all the required skills!</p>
-              )}
-            </div>
+          <CardContent className="min-w-0">
+            <SkillList
+              skills={result.missingSkills}
+              tone="gap"
+              emptyMessage="You have all the required skills!"
+            />
           </CardContent>
         </Card>
 
         {/* Key Strengths */}
-        <Card className="border-primary/30 bg-primary/5">
+        <Card className="min-w-0 overflow-hidden border-primary/30 bg-primary/5">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
               <TrendingUp className="h-5 w-5 text-primary" />
@@ -118,12 +108,12 @@ export function FitAnalysis({ result }: FitAnalysisProps) {
               Your strongest qualifications for this role
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="min-w-0">
             <ul className="space-y-2">
               {result.keyStrengths.map((strength, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm">
-                  <span className="mt-1 text-primary">•</span>
-                  {strength}
+                <li key={i} className="flex items-start gap-2 text-sm break-words">
+                  <span className="mt-1 shrink-0 text-primary">•</span>
+                  <span>{strength}</span>
                 </li>
               ))}
             </ul>
@@ -131,7 +121,7 @@ export function FitAnalysis({ result }: FitAnalysisProps) {
         </Card>
 
         {/* Areas to Improve */}
-        <Card className="border-yellow-500/30 bg-yellow-950/20">
+        <Card className="min-w-0 overflow-hidden border-yellow-500/30 bg-yellow-950/20">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
               <AlertCircle className="h-5 w-5 text-yellow-400" />
@@ -141,12 +131,12 @@ export function FitAnalysis({ result }: FitAnalysisProps) {
               Suggestions to strengthen your application
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="min-w-0">
             <ul className="space-y-2">
               {result.areasToImprove.map((area, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm">
-                  <span className="mt-1 text-yellow-400">•</span>
-                  {area}
+                <li key={i} className="flex items-start gap-2 text-sm break-words">
+                  <span className="mt-1 shrink-0 text-yellow-400">•</span>
+                  <span>{area}</span>
                 </li>
               ))}
             </ul>
