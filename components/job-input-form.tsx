@@ -110,7 +110,7 @@ export function JobInputForm({ onAnalyze, isLoading }: JobInputFormProps) {
               Job Description
             </CardTitle>
             <CardDescription>
-              Paste the full job posting or key requirements
+              Paste the full job posting — scroll inside the box to read long text
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -126,7 +126,7 @@ Example:
 - Responsibilities: Lead development team, architect solutions..."
                 value={jobDescription}
                 onChange={(e) => setJobDescription(e.target.value)}
-                className="min-h-[300px] resize-none bg-background/50 font-mono text-sm"
+                className="h-[320px] max-h-[320px] min-h-0 resize-none overflow-y-auto overscroll-y-contain [field-sizing:fixed] bg-background/50 font-mono text-sm leading-relaxed"
                 disabled={isLoading}
               />
             </div>
@@ -140,7 +140,7 @@ Example:
               Your Resume
             </CardTitle>
             <CardDescription>
-              Upload a PDF or paste your resume content
+              Upload a PDF or paste your resume — scroll inside the box to read long text
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -266,7 +266,7 @@ Experience:
                     setUploadedFileName(null)
                   }
                 }}
-                className="min-h-[180px] resize-none bg-background/50 font-mono text-sm"
+                className="h-[280px] max-h-[280px] min-h-0 resize-none overflow-y-auto overscroll-y-contain [field-sizing:fixed] bg-background/50 font-mono text-sm leading-relaxed"
                 disabled={isLoading}
               />
             </div>
