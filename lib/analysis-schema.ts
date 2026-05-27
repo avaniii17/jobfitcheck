@@ -24,6 +24,9 @@ export const tailoredResumeSchema = z.object({
 })
 
 export const analysisSchema = z.object({
+  companyName: z.string(),
+  companyDescription: z.string(),
+  industry: z.string(),
   fitPercentage: z.number().min(0).max(100),
   matchingSkills: z.array(z.string().max(80)),
   missingSkills: z.array(z.string().max(80)),

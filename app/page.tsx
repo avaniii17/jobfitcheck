@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { JobInputForm } from '@/components/job-input-form'
 import { FitAnalysis } from '@/components/fit-analysis'
 import { GeneratedDocuments } from '@/components/generated-documents'
+import { ReachOut } from '@/components/reach-out'
 import { Sparkles, Zap, FileText, Target } from 'lucide-react'
 import type { AnalysisResult } from '@/lib/analysis-schema'
 
@@ -129,6 +130,16 @@ export default function Home() {
                   coverLetter={result.coverLetter} 
                 />
               </div>
+
+              {result.companyName && (
+                <div>
+                  <ReachOut
+                    companyName={result.companyName}
+                    companyDescription={result.companyDescription ?? ''}
+                    jdSummary={result.summary}
+                  />
+                </div>
+              )}
             </div>
           )}
         </div>

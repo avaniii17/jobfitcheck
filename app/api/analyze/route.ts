@@ -52,6 +52,10 @@ ${resume}
    - Use only facts from the original resume. Do not invent employers, degrees, or dates.
    - Keep content dense enough to fit one printed page.
 8. Write a professional cover letter tailored to this job.
+9. Extract from the job description:
+   - companyName: the name of the hiring company
+   - companyDescription: what the company does in exactly 2 sentences
+   - industry: the industry the company operates in (e.g. "FinTech", "Healthcare", "E-commerce")
 
 Be thorough, constructive, and specific. Do not invent experience the candidate does not have.`,
     })

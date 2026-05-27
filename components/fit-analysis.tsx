@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { SkillList } from '@/components/skill-list'
-import { CheckCircle2, XCircle, TrendingUp, AlertCircle } from 'lucide-react'
+import { CheckCircle2, XCircle, TrendingUp, AlertCircle, Building2 } from 'lucide-react'
 
 import type { AnalysisResult } from '@/lib/analysis-schema'
 
@@ -38,6 +38,30 @@ function ScoreProgress({ value }: { value: number }) {
 export function FitAnalysis({ result }: FitAnalysisProps) {
   return (
     <div className="space-y-6">
+      {/* Company Info */}
+      {result.companyName && (
+        <Card className="border-blue-500/30 bg-gradient-to-br from-blue-950/30 to-transparent">
+          <CardContent className="flex items-start gap-4 pt-6">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-500/20">
+              <Building2 className="h-6 w-6 text-blue-400" />
+            </div>
+            <div className="min-w-0 space-y-1">
+              <div className="flex flex-wrap items-center gap-3">
+                <h3 className="text-lg font-semibold">{result.companyName}</h3>
+                {result.industry && (
+                  <span className="inline-flex items-center rounded-full border border-blue-500/30 bg-blue-500/10 px-2.5 py-0.5 text-xs font-medium text-blue-400">
+                    {result.industry}
+                  </span>
+                )}
+              </div>
+              {result.companyDescription && (
+                <p className="text-sm text-muted-foreground">{result.companyDescription}</p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Fit Score */}
       <Card className="border-primary/30 bg-gradient-to-br from-primary/10 to-transparent">
         <CardHeader className="pb-2">
