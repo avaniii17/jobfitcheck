@@ -1,26 +1,11 @@
 export const maxDuration = 30
 
-interface PDLPerson {
-  full_name: string | null
-  job_title: string | null
-  linkedin_url: string | null
-}
-
-interface PDLSearchResponse {
-  status: number
-  data: PDLPerson[]
-  total: number
-}
-
 export async function POST(req: Request) {
   try {
     const apiKey = process.env.PDL_API_KEY?.trim()
     if (!apiKey) {
       return Response.json(
-        {
-          error:
-            'PDL_API_KEY is missing or empty. Add PDL_API_KEY=your-key to .env.local, then restart the dev server.',
-        },
+        { error: 'PDL_API_KEY is missing or empty.' },
         { status: 500 },
       )
     }
@@ -31,35 +16,31 @@ export async function POST(req: Request) {
       return Response.json({ error: 'companyName is required' }, { status: 400 })
     }
 
-    const query = {
+    const esQuery = {
       query: {
         bool: {
           must: [
-            {
-              match: { job_company_name: companyName },
-            },
-          ],
-          should: [
-            { match: { job_title: 'customer service' } },
-            { match: { job_title: 'customer experience' } },
-            { match: { job_title: 'cx' } },
-            { match: { job_title: 'support' } },
-            { match: { job_title: 'operations' } },
-          ],
-          minimum_should_match: 1,
-        },
-      },
-      size: 5,
+            { term: { job_company_name: companyName.toLowerCase() } }
+          ]
+        }
+      }
     }
 
-    const response = await fetch('https://api.peopledatalabs.com/v5/person/search', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Api-Key': apiKey,
-      },
-      body: JSON.stringify(query),
+    const params = new URLSearchParams({
+      query: JSON.stringify(esQuery),
+      size: '5',
+      pretty: 'true',
     })
+
+    const response = await fetch(
+      `https://api.peopledatalabs.com/v5/person/search?${params.toString()}`,
+      {
+        method: 'GET',
+        headers: {
+          'X-Api-Key': apiKey,
+        },
+      }
+    )
 
     if (!response.ok) {
       const errorBody = await response.text()
@@ -70,12 +51,12 @@ export async function POST(req: Request) {
       )
     }
 
-    const pdlData: PDLSearchResponse = await response.json()
+    const pdlData = await response.json()
 
     const people = (pdlData.data ?? [])
-      .filter((p) => p.full_name)
+      .filter((p: any) => p.full_name)
       .slice(0, 5)
-      .map((p) => ({
+      .map((p: any) => ({
         fullName: p.full_name,
         jobTitle: p.job_title ?? 'Unknown title',
         linkedinUrl: p.linkedin_url ?? null,
