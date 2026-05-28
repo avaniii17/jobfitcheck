@@ -1,17 +1,13 @@
-import { generateText } from 'ai'
-import { anthropic } from '@ai-sdk/anthropic'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 
 export const maxDuration = 30
 
 export async function POST(req: Request) {
   try {
-    const apiKey = process.env.ANTHROPIC_API_KEY?.trim()
+    const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY?.trim()
     if (!apiKey) {
       return Response.json(
-        {
-          error:
-            'ANTHROPIC_API_KEY is missing or empty. Add ANTHROPIC_API_KEY=your-key to .env.local, then restart the dev server.',
-        },
+        { error: 'GOOGLE_GENERATIVE_AI_API_KEY is missing or empty.' },
         { status: 500 },
       )
     }
@@ -26,35 +22,34 @@ export async function POST(req: Request) {
       )
     }
 
-    const result = await generateText({
-      model: anthropic('claude-sonnet-4-20250514'),
-      prompt: `You are a warm, thoughtful professional writing a cold LinkedIn DM to someone you've never met. Write exactly 4 lines (separated by line breaks).
+    const genAI = new GoogleGenerativeAI(apiKey)
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
 
-## About the recipient:
+    const prompt = `You are a warm, thoughtful professional writing a cold LinkedIn DM to someone you've never met. Write exactly 4 lines (separated by line breaks).
+
+About the recipient:
 - Name: ${personName}
 - Title: ${personTitle ?? 'unknown'}
 - Company: ${companyName}
 - What the company does: ${companyDescription ?? 'not specified'}
 
-## Context:
+Context:
 The sender is exploring opportunities in this space. Here is a summary of the job/role area they are interested in:
 ${jdSummary ?? 'Not specified'}
 
-## Rules:
-1. Line 1: A genuine, specific opener that references their role at ${companyName} — show you actually looked them up.
-2. Line 2: Connect to a likely pain point or challenge someone in their position at ${companyName} would face. Be specific, not generic.
-3. Line 3: Briefly mention the sender is exploring this space and genuinely curious to learn from practitioners like them.
-4. Line 4: End with a soft, low-pressure CTA. Do NOT say "hop on a call", "schedule a chat", or anything that sounds like a meeting request. Instead, ask a thoughtful question or invite them to share their perspective.
+Rules:
+1. Line 1: A genuine, specific opener that references their role at ${companyName}
+2. Line 2: Connect to a likely pain point someone in their position at ${companyName} would face
+3. Line 3: Mention the sender is exploring this space and curious to learn from practitioners like them
+4. Line 4: End with a soft low-pressure CTA — ask a thoughtful question, NOT "hop on a call"
 
-## Tone guidelines:
-- Warm and peer-to-peer, like a curious colleague — not a salesperson
-- No flattery, no buzzwords, no corporate speak
-- No emojis
-- No subject line — this is a LinkedIn DM, not an email
-- Output ONLY the 4-line message, nothing else`,
-    })
+Tone: Warm and peer-to-peer, not salesy. No flattery, no buzzwords, no emojis, no subject line.
+Output ONLY the 4-line message, nothing else.`
 
-    return Response.json({ message: result.text.trim() })
+    const result = await model.generateContent(prompt)
+    const text = result.response.text().trim()
+
+    return Response.json({ message: text })
   } catch (error) {
     console.error('Draft outreach API error:', error)
     const message =
