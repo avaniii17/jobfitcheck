@@ -36,7 +36,7 @@ export async function POST(req: Request) {
         bool: {
           must: [
             {
-              term: { job_company_name: companyName.toLowerCase() },
+              match: { job_company_name: companyName },
             },
           ],
           should: [
